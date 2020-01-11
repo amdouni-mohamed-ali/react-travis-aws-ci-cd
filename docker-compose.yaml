@@ -1,0 +1,22 @@
+version: "3"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      # you can use $PWD instead of the dot
+      - .:/app
+  tests:
+    # this is ou test container. when we run it, it will execute the npm run test command
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    # any time you change the tests, check the console to see result
+    command: ["npm", "run", "test"]
