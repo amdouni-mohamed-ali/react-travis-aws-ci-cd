@@ -1,0 +1,15 @@
+# we tell travis that we need a root access
+sudo: required
+
+services:
+  # we need the docker cli to build and run images
+  - docker
+
+before_install:
+  # we are using the Dockerfile.dev because it's the image we need to make tests
+  - docker build -t amdouni-mohamed-ali/react-travis-aws-ci-cd  -f Dockerfile.dev .
+
+# travis will run the commands and test return code. if it's different from 0 he will assume that the code is broken
+script:
+  # this line uses an environment variable used to run test once without launching the watcher. https://create-react-app.dev/docs/running-tests/#linux-macos-bash
+  - docker run -e CI=true amdouni-mohamed-ali/react-travis-aws-ci-cd npm run test
