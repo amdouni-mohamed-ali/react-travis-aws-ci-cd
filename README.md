@@ -1,68 +1,34 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React APP
 
-## Available Scripts
+## commands
 
-In the project directory, you can run:
+### Dev
 
-### `npm start`
+Build image :
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    $ docker build -f Dockerfile.dev -t 1-react-app-travis-aws .
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+In this line, we will have an issue if we did not use the '-v /app/node_modules' argument. Because when building the image the node modules
+inside the container will be overriden because of 'COPY . .' from the docker file.
 
-### `npm test`
+-v /app/node_modules : to say don't remove or map this folder from the container.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    $ docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app 1-react-app-travis-aws
 
-### `npm run build`
+Any time we change the code, theses changes will be propagated to the container and then to your browser.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+or you can use the docker-compose.yaml file :
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    $ docker-compose up
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    $ docker-compose up --build
 
-### `npm run eject`
+    $ docker-compose down
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+we are attaching to the standard in (stdin), standard out (stdout) and standard error (stderr) of the primary process of the container (the process with id 1).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    $ docker attach [CONTAINER_ID]
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To see what's the primary process. Run a shell command on the container and type the command ps.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This is our development environment using docker. Every time we change the source code of the app or the tests, we gonna see these changes immediately on your browser (for the .js files) and on the console used to run docker-compose for tests (.test.js files)
