@@ -16,6 +16,9 @@ RUN npm run build
 
 FROM nginx
 
+# well, we added this line (expose 80) because of elastic beans talk. he will map ports from outside to
+# the docker container based on the expose instructions. in our example, he will map all the traffix to the port 80
+EXPOSE 80
 
 COPY --from=builder /app/build /usr/share/nginx/html
 
